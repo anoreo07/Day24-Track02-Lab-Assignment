@@ -8,16 +8,16 @@ p, admin, model_artifacts, write
 p, ml_engineer, training_data, read
 p, ml_engineer, model_artifacts, read
 p, ml_engineer, model_artifacts, write
-# TODO: ml_engineer KHÔNG được delete production data
-# TODO: ml_engineer KHÔNG được đọc raw PII
+# ml_engineer KHÔNG được delete production data (implicit deny)
+# ml_engineer KHÔNG được đọc raw PII (implicit deny)
 
 p, data_analyst, aggregated_metrics, read
 p, data_analyst, reports, write
-# TODO: data_analyst KHÔNG được đọc raw PII
+# data_analyst KHÔNG được đọc raw PII (implicit deny)
 
 p, intern, sandbox_data, read
 p, intern, sandbox_data, write
-# TODO: intern KHÔNG được access production
+# intern KHÔNG được access production (implicit deny)
 
 # Role inheritance
 g, alice, admin

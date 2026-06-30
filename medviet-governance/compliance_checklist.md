@@ -28,5 +28,10 @@
 | Audit logging | CloudTrail + API access logs | ⬜ Todo | Platform Team |
 | Breach detection | Anomaly monitoring (Prometheus) | ⬜ Todo | Security Team |
 
-## F. TODO: Điền vào phần còn thiếu
-Với mỗi row còn "⬜ Todo", mô tả technical solution cụ thể bạn sẽ implement.
+## F. Technical Solutions cho các mục "⬜ Todo"
+
+### Audit Logging
+- **Solution:** Implement structured logging using Python's `logging` module with JSON formatter. Ghi log tất cả API requests (user, action, resource, timestamp, IP) vào file riêng biệt. Dùng ELK stack (Elasticsearch, Logstash, Kibana) hoặc AWS CloudTrail để aggregate log. Set log retention policy tối thiểu 12 tháng theo NĐ13.
+
+### Breach Detection
+- **Solution:** Thiết lập Prometheus alerts cho các metrics: (1) Số lượng 403 errors đột biến → potential brute force, (2) Response time bất thường → potential data exfiltration, (3) Số lượng truy cập raw PII ngoài giờ làm việc. Grafana dashboard cho security team. Webhook alert vào Slack/Email cho DPO trong 72h.

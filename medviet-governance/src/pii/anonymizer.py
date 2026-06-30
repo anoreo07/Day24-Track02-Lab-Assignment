@@ -35,18 +35,26 @@ class MedVietAnonymizer:
                 "PERSON": OperatorConfig("replace", 
                           {"new_value": fake.name()}),
                 "EMAIL_ADDRESS": OperatorConfig("replace", 
-                                 {"new_value": ___}),   # TODO: fake email
+                                 {"new_value": fake.email()}),   # TODO: fake email
                 "VN_CCCD": OperatorConfig("replace", 
-                           {"new_value": ___}),          # TODO: fake CCCD
+                           {"new_value": str(fake.random_int(min=100000000000, max=999999999999))}),          # TODO: fake CCCD
                 "VN_PHONE": OperatorConfig("replace", 
-                            {"new_value": ___}),         # TODO: fake phone
+                            {"new_value": f"0{fake.random_element([3,5,7,8,9])}{fake.random_int(min=10000000, max=99999999)}"}),         # TODO: fake phone
             }
         elif strategy == "mask":
-            # TODO: implement masking
-            pass
+            operators = {
+                "PERSON": OperatorConfig("mask", {"masking_char": "*", "chars_to_mask": 0, "from_end": True}),
+                "EMAIL_ADDRESS": OperatorConfig("mask", {"masking_char": "*", "chars_to_mask": 0, "from_end": True}),
+                "VN_CCCD": OperatorConfig("mask", {"masking_char": "*", "chars_to_mask": 8, "from_end": True}),
+                "VN_PHONE": OperatorConfig("mask", {"masking_char": "*", "chars_to_mask": 6, "from_end": True}),
+            }
         elif strategy == "hash":
-            # TODO: implement hashing dùng sha256
-            pass
+            operators = {
+                "PERSON": OperatorConfig("hash"),
+                "EMAIL_ADDRESS": OperatorConfig("hash"),
+                "VN_CCCD": OperatorConfig("hash"),
+                "VN_PHONE": OperatorConfig("hash"),
+            }
 
         anonymized = self.anonymizer.anonymize(
             text=text,
@@ -65,8 +73,18 @@ class MedVietAnonymizer:
         """
         df_anon = df.copy()
 
-        # TODO: Xử lý từng cột PII
-        # Gợi ý: dùng df.apply() hoặc list comprehension
+        # Xử lý cột text dùng anonymize_text
+        for col in ["ho_ten", "dia_chi", "email"]:
+            df_anon[col] = df_anon[col].apply(lambda x: self.anonymize_text(str(x)))
+
+        # Xử lý cột số dùng fake data
+        for col in ["cccd", "so_dien_thoai"]:
+            df_anon[col] = df_anon[col].apply(
+                lambda x: self.anonymize_text(str(x), strategy="replace")
+            )
+
+        # Giữ nguyên benh, ket_qua_xet_nghiem, patient_id
+        # (đã copy từ df nên không cần làm gì thêm)
 
         return df_anon
 
