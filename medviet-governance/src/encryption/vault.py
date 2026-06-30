@@ -110,7 +110,7 @@ class SimpleVault:
 
         return plaintext.decode()
 
-    def encrypt_column(self, df, column: str) -> pd.DataFrame:
+    def encrypt_column(self, df, column: str) -> "pd.DataFrame":
         """
         TODO: Encrypt một cột trong DataFrame.
         Thay thế giá trị gốc bằng JSON string của encrypted payload.

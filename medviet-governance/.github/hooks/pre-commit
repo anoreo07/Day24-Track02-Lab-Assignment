@@ -10,7 +10,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 2. Bandit SAST scan
+# 2. Bandit SAST scan  
 echo "🐍 Running Bandit SAST..."
 bandit -r src/ -ll -q
 if [ $? -ne 0 ]; then
